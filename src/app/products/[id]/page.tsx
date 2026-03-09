@@ -134,7 +134,12 @@ export default function ProductPage() {
                 type="number"
                 min="1"
                 value={qty}
-                onChange={e => setQty(Math.max(1, parseInt(e.target.value) || 1))}
+                onChange={e => {
+                  const val = e.target.value;
+                  if (val === '') return; // allow clearing while typing
+                  const parsed = parseInt(val, 10);
+                  if (!isNaN(parsed)) setQty(Math.max(1, parsed));
+                }}
                 className="w-16 text-center py-2 border-x border-gray-300 focus:outline-none"
               />
               <button

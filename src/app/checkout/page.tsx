@@ -21,6 +21,7 @@ export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const [step, setStep] = useState<Step>(1);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
   const [form, setForm] = useState<FormData>({
     companyName: '',
     cvr: '',
@@ -40,6 +41,27 @@ export default function CheckoutPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors([]);
+  }
+
+  function validateStep1(): boolean {
+    const missing: string[] = [];
+    if (!form.companyName.trim()) missing.push('Virksomhedsnavn');
+    if (!form.cvr.trim()) missing.push('CVR-nummer');
+    if (!form.contactPerson.trim()) missing.push('Kontaktperson');
+    if (!form.email.trim()) missing.push('E-mail');
+    if (!form.phone.trim()) missing.push('Telefon');
+    setErrors(missing);
+    return missing.length === 0;
+  }
+
+  function validateStep2(): boolean {
+    const missing: string[] = [];
+    if (!form.address.trim()) missing.push('Adresse');
+    if (!form.zip.trim()) missing.push('Postnummer');
+    if (!form.city.trim()) missing.push('By');
+    setErrors(missing);
+    return missing.length === 0;
   }
 
   function handleConfirm() {
@@ -179,11 +201,14 @@ export default function CheckoutPage() {
                 </div>
               </div>
               <button
-                onClick={() => setStep(2)}
+                onClick={() => { if (validateStep1()) setStep(2); }}
                 className="mt-6 bg-[#003B8E] hover:bg-[#0056C7] text-white px-6 py-3 rounded-lg font-semibold"
               >
                 Næste: Levering →
               </button>
+              {errors.length > 0 && (
+                <p className="mt-3 text-sm text-red-600">Udfyld venligst: {errors.join(', ')}</p>
+              )}
             </div>
           )}
 
@@ -248,12 +273,15 @@ export default function CheckoutPage() {
                   ← Tilbage
                 </button>
                 <button
-                  onClick={() => setStep(3)}
+                  onClick={() => { if (validateStep2()) setStep(3); }}
                   className="bg-[#003B8E] hover:bg-[#0056C7] text-white px-6 py-3 rounded-lg font-semibold"
                 >
                   Næste: Bekræft →
                 </button>
               </div>
+              {errors.length > 0 && (
+                <p className="mt-3 text-sm text-red-600">Udfyld venligst: {errors.join(', ')}</p>
+              )}
             </div>
           )}
 
