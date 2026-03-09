@@ -69,6 +69,14 @@ export default function CheckoutPage() {
     clearCart();
   }
 
+  function handleStep1Next() {
+    if (validateStep1()) setStep(2);
+  }
+
+  function handleStep2Next() {
+    if (validateStep2()) setStep(3);
+  }
+
   if (orderPlaced) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
@@ -201,7 +209,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
               <button
-                onClick={() => { if (validateStep1()) setStep(2); }}
+                onClick={handleStep1Next}
                 className="mt-6 bg-[#003B8E] hover:bg-[#0056C7] text-white px-6 py-3 rounded-lg font-semibold"
               >
                 Næste: Levering →
@@ -273,7 +281,7 @@ export default function CheckoutPage() {
                   ← Tilbage
                 </button>
                 <button
-                  onClick={() => { if (validateStep2()) setStep(3); }}
+                  onClick={handleStep2Next}
                   className="bg-[#003B8E] hover:bg-[#0056C7] text-white px-6 py-3 rounded-lg font-semibold"
                 >
                   Næste: Bekræft →
