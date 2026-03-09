@@ -1,6 +1,6 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from '@/data/products';
+import { Product, products as allProducts } from '@/data/products';
 
 export interface CartItem {
   productId: string;
@@ -75,7 +75,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems(prev =>
       prev.map(i => {
         if (i.productId !== productId) return i;
-        return { ...i, qty, lineTotal: qty * i.unitPrice };
+        const product = allProducts.find(p => p.id === productId);
+        const unitPrice = product ? getVolumePrice(product, qty) : i.unitPrice;
+        return { ...i, qty, unitPrice, lineTotal: qty * unitPrice };
       })
     );
   }

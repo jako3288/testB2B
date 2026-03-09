@@ -2,7 +2,7 @@
 import { useParams } from 'next/navigation';
 import { products } from '@/data/products';
 import { useCart } from '@/context/CartContext';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
 export default function ProductPage() {
@@ -11,7 +11,7 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const product = products.find(p => p.id === id);
+  const product = useMemo(() => products.find(p => p.id === id), [id]);
 
   if (!product) {
     return (
